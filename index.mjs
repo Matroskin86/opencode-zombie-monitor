@@ -18,29 +18,32 @@ const getLang = () => {
   return "en"
 }
 
+// Format memory size
+const formatMB = (mb) => mb >= 1024 ? `${(mb / 1024).toFixed(1)}GB` : `${Math.round(mb)}MB`
+
 // Localized messages
 const i18n = {
   en: {
-    killed: (n) => `🧟 Killed ${n} zombie opencode process${n > 1 ? "es" : ""} | Freed ~${n * 100}MB RAM`,
-    found: (n) => `🧟 ${n} zombie opencode process${n > 1 ? "es" : ""} | ~${n * 100}MB RAM | Fix: oc-kill-zombies`,
-    status: (zombies, total) => zombies > 0
-      ? `🧟 ${zombies} zombie${zombies > 1 ? "s" : ""} of ${total} process${total > 1 ? "es" : ""} | ~${zombies * 100}MB RAM | Fix: oc-kill-zombies`
+    killed: (n, mb) => `🧟 Killed ${n} zombie opencode process${n > 1 ? "es" : ""} | Freed ${formatMB(mb)} RAM`,
+    found: (n, mb) => `🧟 ${n} zombie opencode process${n > 1 ? "es" : ""} | ${formatMB(mb)} RAM | Fix: oc-kill-zombies`,
+    status: (zombies, total, mb) => zombies > 0
+      ? `🧟 ${zombies} zombie${zombies > 1 ? "s" : ""} of ${total} process${total > 1 ? "es" : ""} | ${formatMB(mb)} RAM | Fix: oc-kill-zombies`
       : `✅ ${total} process${total > 1 ? "es" : ""}, no zombies`,
     commandDesc: "Check zombie opencode processes"
   },
   ru: {
-    killed: (n) => `🧟 Убито ${n} зомби-процессов opencode | Освобождено ~${n * 100}MB RAM`,
-    found: (n) => `🧟 ${n} зомби-процессов opencode | ~${n * 100}MB RAM | Fix: oc-kill-zombies`,
-    status: (zombies, total) => zombies > 0
-      ? `🧟 ${zombies} зомби из ${total} процессов | ~${zombies * 100}MB RAM | Fix: oc-kill-zombies`
+    killed: (n, mb) => `🧟 Убито ${n} зомби-процессов opencode | Освобождено ${formatMB(mb)} RAM`,
+    found: (n, mb) => `🧟 ${n} зомби-процессов opencode | ${formatMB(mb)} RAM | Fix: oc-kill-zombies`,
+    status: (zombies, total, mb) => zombies > 0
+      ? `🧟 ${zombies} зомби из ${total} процессов | ${formatMB(mb)} RAM | Fix: oc-kill-zombies`
       : `✅ ${total} процессов, зомби нет`,
     commandDesc: "Проверить зомби-процессы opencode"
   },
   zh: {
-    killed: (n) => `🧟 已击杀 ${n} 个僵尸 opencode 进程 | 释放 ~${n * 100}MB 内存`,
-    found: (n) => `🧟 发现 ${n} 个僵尸 opencode 进程 | ~${n * 100}MB 内存 | 修复: oc-kill-zombies`,
-    status: (zombies, total) => zombies > 0
-      ? `🧟 ${total} 个进程中有 ${zombies} 个僵尸 | ~${zombies * 100}MB 内存 | 修复: oc-kill-zombies`
+    killed: (n, mb) => `🧟 已击杀 ${n} 个僵尸 opencode 进程 | 释放 ${formatMB(mb)} 内存`,
+    found: (n, mb) => `🧟 发现 ${n} 个僵尸 opencode 进程 | ${formatMB(mb)} 内存 | 修复: oc-kill-zombies`,
+    status: (zombies, total, mb) => zombies > 0
+      ? `🧟 ${total} 个进程中有 ${zombies} 个僵尸 | ${formatMB(mb)} 内存 | 修复: oc-kill-zombies`
       : `✅ ${total} 个进程，没有僵尸`,
     commandDesc: "检查僵尸 opencode 进程"
   }
@@ -48,15 +51,16 @@ const i18n = {
 
 const t = i18n[getLang()]
 
-// Count only processes WITHOUT terminal (real zombies)
-const getZombieCount = async () => {
+// Get zombie count and their total memory (RSS in MB)
+const getZombieStats = async () => {
   try {
-    // macOS: TTY = "??" | Linux: TTY = "?"
     const ttyPattern = isMac ? '??' : '?'
-    const { stdout } = await execAsync(`ps aux | grep "[o]pencode" | grep -v "opencode/" | awk '$7 == "${ttyPattern}" {count++} END {print count+0}'`)
-    return parseInt(stdout.trim()) || 0
+    // $6 = RSS in KB on both macOS and Linux
+    const { stdout } = await execAsync(`ps aux | grep "[o]pencode" | grep -v "opencode/" | awk '$7 == "${ttyPattern}" {count++; mem+=$6} END {print count+0, mem/1024}'`)
+    const [count, mb] = stdout.trim().split(/\s+/)
+    return { count: parseInt(count) || 0, mb: parseFloat(mb) || 0 }
   } catch {
-    return 0
+    return { count: 0, mb: 0 }
   }
 }
 
@@ -119,13 +123,13 @@ export const ZombieMonitor = async ({ client }) => {
       const sessionId = getSessionIdFromMessages(output.messages)
       if (!sessionId) return
 
-      const zombies = await getZombieCount()
+      const { count: zombies, mb } = await getZombieStats()
       
       // Auto-kill if zombies >= threshold
       if (zombies >= AUTO_KILL_THRESHOLD) {
         await killZombies()
         try {
-          await sendNotification(client, sessionId, t.killed(zombies))
+          await sendNotification(client, sessionId, t.killed(zombies, mb))
         } catch (e) {}
         lastNotifiedCount = 0
       }
@@ -133,7 +137,7 @@ export const ZombieMonitor = async ({ client }) => {
       else if (zombies > 0 && zombies > lastNotifiedCount) {
         lastNotifiedCount = zombies
         try {
-          await sendNotification(client, sessionId, t.found(zombies))
+          await sendNotification(client, sessionId, t.found(zombies, mb))
         } catch (e) {}
       } else if (zombies === 0) {
         lastNotifiedCount = 0
@@ -143,10 +147,10 @@ export const ZombieMonitor = async ({ client }) => {
     "command.execute.before": async (input) => {
       if (input.command !== "zombies") return
 
-      const zombies = await getZombieCount()
+      const { count: zombies, mb } = await getZombieStats()
       const total = await getTotalCount()
 
-      await sendNotification(client, input.sessionID, t.status(zombies, total))
+      await sendNotification(client, input.sessionID, t.status(zombies, total, mb))
       throw new Error("__ZOMBIES_HANDLED__")
     }
   }

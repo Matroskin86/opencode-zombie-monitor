@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# IDE & Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local development context (credentials!)
+CONTEXT.md
+
+# Local tools/scripts
+download-emoji.mjs
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build artifacts
+dist/
+build/
+*.tgz
+
+# Environment
+.env
+.env.*
+
+# Temp files
+tmp/
+temp/
+*.tmp
