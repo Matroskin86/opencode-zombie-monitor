@@ -1,24 +1,25 @@
-# opencode-zombie-monitor
+# 🧟 opencode-zombie-monitor
 
 [![npm](https://img.shields.io/npm/v/opencode-zombie-monitor)](https://www.npmjs.com/package/opencode-zombie-monitor)
 [![license](https://img.shields.io/github/license/Matroskin86/opencode-zombie-monitor)](./LICENSE)
 
 OpenCode plugin that kills orphaned processes eating your RAM.
 
-## Problem
+## 😱 Problem
 
-Close terminal without `q` → opencode process stays alive → eats ~100MB RAM. Do it 10 times → 1GB gone.
+Close terminal without `q` → opencode process stays alive → eats ~100MB RAM. Do it 10 times → 1GB gone. Classic zombie apocalypse.
 
 ```
 $ ps aux | grep opencode
 opencode  ??  100MB
 opencode  ??  100MB
 opencode  ??  100MB
+... 💀 your RAM is gone
 ```
 
-Those `??` mean no TTY attached = zombie.
+Those `??` = no TTY = zombie 🧟
 
-## Install
+## 📦 Install
 
 ```json
 {
@@ -26,22 +27,24 @@ Those `??` mean no TTY attached = zombie.
 }
 ```
 
-## How it works
+## 🔫 How it works
 
-Every message you send → plugin checks for zombies → kills them → reports:
+Every message you send → plugin hunts zombies → kills them → reports:
 
 ```
 🧟 Killed 2 zombie processes | Freed 200MB RAM | Headshot! 💥
 ```
 
-No tokens wasted, notification goes via `ignored` message.
+No tokens wasted — notification goes via `ignored` message.
 
-## Commands
+## 🎮 Commands
 
-- `/zombies` — check status
-- `/kill-zombies` — manual kill
+| Command | What |
+|---------|------|
+| `/zombies` | check status |
+| `/kill-zombies` | manual headshot |
 
-## Config
+## ⚙️ Config
 
 ```json
 {
@@ -56,15 +59,21 @@ No tokens wasted, notification goes via `ignored` message.
 | `autoKill` | `true` | kill automatically or just notify |
 | `threshold` | `1` | min zombies to trigger |
 
-## Platforms
+Set `autoKill: false` for manual mode — plugin will only notify, you pull the trigger with `/kill-zombies`.
 
-- macOS ✓
-- Linux ✓
-- Windows — nope
+## 🖥️ Platforms
 
-## Languages
+- macOS ✅
+- Linux ✅  
+- Windows ❌ zombies win
 
-Auto-detects from `LANG`: English, Russian, Chinese.
+## 🌍 Languages
+
+Auto-detects from `LANG`: EN, RU, ZH.
+
+## 📜 License
+
+MIT
 
 ---
 
