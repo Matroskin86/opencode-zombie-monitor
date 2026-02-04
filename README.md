@@ -1,21 +1,39 @@
-# OpenCode Zombie Monitor
+# 🧟 OpenCode Zombie Monitor
 
 [![GitHub](https://img.shields.io/github/license/Matroskin86/opencode-zombie-monitor)](https://github.com/Matroskin86/opencode-zombie-monitor/blob/main/LICENSE)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-blue)]()
+[![OpenCode](https://img.shields.io/badge/opencode-plugin-purple)]()
 
-Automatically detects and kills orphaned (zombie) OpenCode processes that consume RAM after closing terminal tabs.
+> *"The only good zombie is a dead zombie"* 💀
 
-## The Problem
+Automatically hunts down and eliminates orphaned OpenCode processes that lurk in your system, devouring precious RAM.
 
-When you close an iTerm2/terminal tab without properly exiting OpenCode (`q` or `Ctrl+C`), the process keeps running in the background without a terminal (TTY). These "zombie" processes accumulate and consume ~100MB RAM each.
+## 😱 The Horror Story
 
-## Solution
+You're coding happily with OpenCode. You close a terminal tab. Life goes on...
 
-This plugin automatically:
-- 🔍 Detects zombie processes (no TTY) on every message
-- 🧟 Kills them immediately
-- 📢 Shows notification in chat (doesn't use LLM tokens)
+**BUT WAIT!** The process didn't die. It's still there. Lurking. Consuming ~100MB of your RAM. And every time you close a tab without pressing `q`... another zombie rises.
 
-## Installation
+Before you know it:
+```
+$ ps aux | grep opencode
+opencode  ??  100MB
+opencode  ??  100MB
+opencode  ??  100MB
+opencode  ??  100MB
+... 💀 YOUR RAM IS GONE 💀
+```
+
+## 🔫 The Solution
+
+This plugin is your zombie apocalypse survival kit:
+
+- 🔍 **Detects** zombie processes (no TTY = undead)
+- 🧟 **Kills** them on sight (every message you send)
+- 📢 **Reports** the kills (without wasting LLM tokens)
+- 🧹 **Keeps** your system clean automatically
+
+## 📦 Installation
 
 Add to your `opencode.json`:
 
@@ -25,59 +43,108 @@ Add to your `opencode.json`:
 }
 ```
 
-Restart OpenCode.
+Restart OpenCode. The hunt begins. 🎯
 
-## Usage
+## 🎮 Usage
 
-**Automatic:** Plugin checks for zombies on every message and kills them automatically.
+### Automatic Mode (default)
 
-**Manual:** Use `/zombies` command to check current status.
+Just chat normally. The plugin silently patrols your system and eliminates zombies on every message.
 
-## Notifications
-
-When zombies are killed:
+When zombies are neutralized, you'll see:
 ```
 🧟 Killed 3 zombie opencode processes | Freed ~300MB RAM
 ```
 
-When checking status (`/zombies`):
+### Manual Mode
+
+Want to check the situation yourself?
+
+```
+/zombies
+```
+
+Response when all clear:
 ```
 ✅ 2 processes, no zombies
 ```
 
-## Configuration
-
-Edit `index.mjs` to change auto-kill threshold:
-
-```javascript
-// Kill immediately (default)
-const AUTO_KILL_THRESHOLD = 1
-
-// Or kill only when 5+ zombies accumulate
-const AUTO_KILL_THRESHOLD = 5
+Response when trouble brewing:
+```
+🧟 5 zombies of 7 processes | ~500MB RAM | Fix: oc-kill-zombies
 ```
 
-## Supported Platforms
+## ⚙️ Configuration
 
-| Platform | Status |
-|----------|--------|
-| macOS    | ✅     |
-| Linux    | ✅     |
-| Windows  | ❌     |
+Edit `index.mjs` to adjust aggression level:
 
-## Language Support
+```javascript
+// RAMBO MODE: Kill on sight (default)
+const AUTO_KILL_THRESHOLD = 1
 
-Auto-detects system language from `LANG` / `LC_ALL` environment variables:
-- 🇬🇧 English (default)
-- 🇷🇺 Russian
+// PATIENT MODE: Wait until horde forms
+const AUTO_KILL_THRESHOLD = 5
 
-## How It Works
+// PACIFIST MODE: Only notify, never kill
+const AUTO_KILL_THRESHOLD = 999
+```
 
-1. Uses `ps aux` to list processes
-2. Filters by TTY column (`??` on macOS, `?` on Linux = no terminal)
-3. Kills orphaned processes with `kill -9`
-4. Sends notification via OpenCode's `ignored` message (no LLM cost)
+## 🖥️ Supported Platforms
 
-## License
+| Platform | Status | TTY Pattern |
+|----------|--------|-------------|
+| macOS    | ✅ Ready to hunt | `??` |
+| Linux    | ✅ Ready to hunt | `?` |
+| Windows  | ❌ Zombies win | N/A |
 
-MIT
+## 🌍 Language Support
+
+Auto-detects your language. Because zombies are international.
+
+| Language | Detection | Example |
+|----------|-----------|---------|
+| 🇬🇧 English | default | "Killed 3 zombie processes" |
+| 🇷🇺 Russian | `LANG=ru*` | "Убито 3 зомби-процессов" |
+
+## 🔬 How It Works
+
+```
+┌─────────────────────────────────────────┐
+│  You send a message                     │
+└─────────────────┬───────────────────────┘
+                  ▼
+┌─────────────────────────────────────────┐
+│  Plugin runs: ps aux | grep opencode    │
+└─────────────────┬───────────────────────┘
+                  ▼
+┌─────────────────────────────────────────┐
+│  Filter: TTY == "??" (no terminal)      │
+│  These are the zombies 🧟               │
+└─────────────────┬───────────────────────┘
+                  ▼
+┌─────────────────────────────────────────┐
+│  Execute: kill -9 <zombie_pids>         │
+│  Headshot! 💥                           │
+└─────────────────┬───────────────────────┘
+                  ▼
+┌─────────────────────────────────────────┐
+│  Notify via "ignored" message           │
+│  (Free! No LLM tokens used)             │
+└─────────────────────────────────────────┘
+```
+
+## 🤝 Contributing
+
+Found a bug? Zombies escaped? Open an issue!
+
+Want to add Windows support? PRs welcome! (Good luck with that 😅)
+
+## 📜 License
+
+MIT — Use it, fork it, kill zombies with it.
+
+---
+
+<p align="center">
+  <i>Made with 🧠 (before zombies ate it)</i>
+</p>
