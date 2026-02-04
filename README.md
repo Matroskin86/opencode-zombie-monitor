@@ -1,6 +1,7 @@
 # 🧟 opencode-zombie-monitor
 
 [![npm](https://img.shields.io/npm/v/opencode-zombie-monitor)](https://www.npmjs.com/package/opencode-zombie-monitor)
+[![opencode plugin](https://img.shields.io/badge/opencode-plugin-purple)](https://opencode.ai)
 [![license](https://img.shields.io/github/license/Matroskin86/opencode-zombie-monitor)](./LICENSE)
 
 OpenCode plugin that kills orphaned processes eating your RAM.
