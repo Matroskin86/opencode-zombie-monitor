@@ -35,7 +35,7 @@ Every message you send → plugin hunts zombies → kills them → reports:
 🧟 Killed 2 zombie processes | Freed 200MB RAM | Headshot! 💥
 ```
 
-No tokens wasted — notification goes via `ignored` message.
+No tokens wasted - notification goes via `ignored` message.
 
 ## 🎮 Commands
 
@@ -59,7 +59,7 @@ No tokens wasted — notification goes via `ignored` message.
 | `autoKill` | `true` | kill automatically or just notify |
 | `threshold` | `1` | min zombies to trigger |
 
-Set `autoKill: false` for manual mode — plugin will only notify, you pull the trigger with `/kill-zombies`.
+Set `autoKill: false` for manual mode - plugin will only notify, you pull the trigger with `/kill-zombies`.
 
 ## 🖥️ Platforms
 
