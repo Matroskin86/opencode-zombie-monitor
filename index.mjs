@@ -11,8 +11,8 @@ const execAsync = promisify(exec)
 const isMac = platform() === "darwin"
 
 // Detect system language
-const lang = (process.env.LANG || process.env.LC_ALL || "").toLowerCase()
-const getLang = () => {
+const detectLang = () => {
+  const lang = (process.env.LANG || process.env.LC_ALL || "").toLowerCase()
   if (lang.startsWith("ru")) return "ru"
   if (lang.startsWith("zh")) return "zh"
   return "en"
@@ -55,7 +55,7 @@ const i18n = {
   }
 }
 
-const t = i18n[getLang()]
+const t = i18n[detectLang()]
 
 // Get zombie count and their total memory (RSS in MB)
 const getZombieStats = async () => {
