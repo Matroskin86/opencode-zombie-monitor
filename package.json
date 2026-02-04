@@ -1,6 +1,6 @@
 {
   "name": "opencode-zombie-monitor",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Auto-kill zombie opencode processes. Supports macOS and Linux with auto language detection (EN/RU).",
   "main": "index.mjs",
   "type": "module",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jenshen86/opencode-zombie-monitor"
+    "url": "https://github.com/Matroskin86/opencode-zombie-monitor"
   },
   "peerDependencies": {
     "@opencode-ai/plugin": ">=1.0.0"

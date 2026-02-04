@@ -1,5 +1,6 @@
 # 🧟 OpenCode Zombie Monitor
 
+[![npm](https://img.shields.io/npm/v/opencode-zombie-monitor)](https://www.npmjs.com/package/opencode-zombie-monitor)
 [![GitHub](https://img.shields.io/github/license/Matroskin86/opencode-zombie-monitor)](https://github.com/Matroskin86/opencode-zombie-monitor/blob/main/LICENSE)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-blue)]()
 [![OpenCode](https://img.shields.io/badge/opencode-plugin-purple)]()
@@ -39,7 +40,7 @@ Add to your `opencode.json`:
 
 ```json
 {
-  "plugin": ["github:Matroskin86/opencode-zombie-monitor"]
+  "plugin": ["opencode-zombie-monitor"]
 }
 ```
 
@@ -53,40 +54,71 @@ Just chat normally. The plugin silently patrols your system and eliminates zombi
 
 When zombies are neutralized, you'll see:
 ```
-🧟 Killed 3 zombie opencode processes | Freed ~300MB RAM
+🧟 Killed 3 zombie processes | Freed 300MB RAM | Headshot! 💥
 ```
 
-### Manual Mode
+### Commands
 
-Want to check the situation yourself?
+| Command | Description |
+|---------|-------------|
+| `/zombies` | Check zombie status |
+| `/kill-zombies` | Manually kill all zombies |
 
+**Check status:**
 ```
 /zombies
 ```
-
-Response when all clear:
 ```
 ✅ 2 processes, no zombies
 ```
-
-Response when trouble brewing:
+or
 ```
-🧟 5 zombies of 7 processes | ~500MB RAM | Fix: oc-kill-zombies
+🧟 5 zombies of 7 processes | 500MB RAM | /kill-zombies
+```
+
+**Manual kill:**
+```
+/kill-zombies
+```
+```
+💥 Headshot! Killed 5 zombies | Freed 500MB RAM
 ```
 
 ## ⚙️ Configuration
 
-Edit `index.mjs` to adjust aggression level:
+Configure in your `opencode.json`:
 
-```javascript
-// RAMBO MODE: Kill on sight (default)
-const AUTO_KILL_THRESHOLD = 1
+```json
+{
+  "plugin": [
+    ["opencode-zombie-monitor", {
+      "autoKill": true,
+      "threshold": 1
+    }]
+  ]
+}
+```
 
-// PATIENT MODE: Wait until horde forms
-const AUTO_KILL_THRESHOLD = 5
+| Option | Default | Description |
+|--------|---------|-------------|
+| `autoKill` | `true` | Auto-kill zombies on every message |
+| `threshold` | `1` | Minimum zombies to trigger action |
 
-// PACIFIST MODE: Only notify, never kill
-const AUTO_KILL_THRESHOLD = 999
+### Modes
+
+**RAMBO MODE** (default) — Kill on sight:
+```json
+{ "autoKill": true, "threshold": 1 }
+```
+
+**PATIENT MODE** — Wait until horde forms:
+```json
+{ "autoKill": true, "threshold": 5 }
+```
+
+**MANUAL MODE** — Only notify, kill with `/kill-zombies`:
+```json
+{ "autoKill": false }
 ```
 
 ## 🖥️ Supported Platforms
