@@ -10,8 +10,13 @@ import { platform } from "os"
 const execAsync = promisify(exec)
 const isMac = platform() === "darwin"
 
-// Detect system language (ru = Russian, else English)
-const isRussian = (process.env.LANG || process.env.LC_ALL || "").toLowerCase().startsWith("ru")
+// Detect system language
+const lang = (process.env.LANG || process.env.LC_ALL || "").toLowerCase()
+const getLang = () => {
+  if (lang.startsWith("ru")) return "ru"
+  if (lang.startsWith("zh")) return "zh"
+  return "en"
+}
 
 // Localized messages
 const i18n = {
@@ -30,10 +35,18 @@ const i18n = {
       ? `🧟 ${zombies} зомби из ${total} процессов | ~${zombies * 100}MB RAM | Fix: oc-kill-zombies`
       : `✅ ${total} процессов, зомби нет`,
     commandDesc: "Проверить зомби-процессы opencode"
+  },
+  zh: {
+    killed: (n) => `🧟 已击杀 ${n} 个僵尸 opencode 进程 | 释放 ~${n * 100}MB 内存`,
+    found: (n) => `🧟 发现 ${n} 个僵尸 opencode 进程 | ~${n * 100}MB 内存 | 修复: oc-kill-zombies`,
+    status: (zombies, total) => zombies > 0
+      ? `🧟 ${total} 个进程中有 ${zombies} 个僵尸 | ~${zombies * 100}MB 内存 | 修复: oc-kill-zombies`
+      : `✅ ${total} 个进程，没有僵尸`,
+    commandDesc: "检查僵尸 opencode 进程"
   }
 }
 
-const t = isRussian ? i18n.ru : i18n.en
+const t = i18n[getLang()]
 
 // Count only processes WITHOUT terminal (real zombies)
 const getZombieCount = async () => {

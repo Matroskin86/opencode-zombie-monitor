@@ -105,6 +105,7 @@ Auto-detects your language. Because zombies are international.
 |----------|-----------|---------|
 | 🇬🇧 English | default | "Killed 3 zombie processes" |
 | 🇷🇺 Russian | `LANG=ru*` | "Убито 3 зомби-процессов" |
+| 🇨🇳 Chinese | `LANG=zh*` | "已击杀 3 个僵尸进程" |
 
 ## 🔬 How It Works
 
@@ -147,4 +148,6 @@ MIT — Use it, fork it, kill zombies with it.
 
 <p align="center">
   <i>Made with 🧠 (before zombies ate it)</i>
+  <br><br>
+  <b>🇷🇺 From Russia with ❤️‍🔥</b>
 </p>
