@@ -4,21 +4,25 @@
 [![opencode plugin](https://img.shields.io/badge/opencode-plugin-purple)](https://opencode.ai)
 [![license](https://img.shields.io/github/license/Matroskin86/opencode-zombie-monitor)](./LICENSE)
 
-OpenCode plugin that kills orphaned processes eating your RAM.
+> *"The only good zombie is a dead zombie"* 💀
 
-## 😱 Problem
+OpenCode plugin that hunts down and eliminates orphaned processes devouring your RAM.
 
-Close terminal without `q` → opencode process stays alive → eats ~100MB RAM. Do it 10 times → 1GB gone. Classic zombie apocalypse.
+## 😱 The Horror Story
+
+You're coding happily with OpenCode. You close a terminal tab. Life goes on...
+
+**BUT WAIT!** The process didn't die. It's still there. Lurking. Eating your RAM. And every time you close a tab without pressing `q`... another zombie rises.
 
 ```
 $ ps aux | grep opencode
-opencode  ??  100MB
-opencode  ??  100MB
-opencode  ??  100MB
+opencode  ??  S  156MB
+opencode  ??  S  143MB
+opencode  ??  S  98MB
 ... 💀 your RAM is gone
 ```
 
-Those `??` = no TTY = zombie 🧟
+Those `??` = no TTY attached = zombie 🧟
 
 ## 📦 Install
 
@@ -28,12 +32,14 @@ Those `??` = no TTY = zombie 🧟
 }
 ```
 
+Restart OpenCode. The hunt begins 🎯
+
 ## 🔫 How it works
 
-Every message you send → plugin hunts zombies → kills them → reports:
+Every message you send → plugin scans for zombies → calculates their RAM → kills them → reports exact numbers:
 
 ```
-🧟 Killed 2 zombie processes | Freed 200MB RAM | Headshot! 💥
+🧟 Killed 3 zombie processes | Freed 397MB RAM | Headshot! 💥
 ```
 
 No tokens wasted - notification goes via `ignored` message.
@@ -43,7 +49,22 @@ No tokens wasted - notification goes via `ignored` message.
 | Command | What |
 |---------|------|
 | `/zombies` | check status |
-| `/kill-zombies` | manual headshot |
+| `/kill-zombies` | manual headshot 💥 |
+
+```
+/zombies
+✅ 2 processes, no zombies
+```
+
+```
+/zombies
+🧟 3 zombies of 5 processes | 284MB RAM | /kill-zombies
+```
+
+```
+/kill-zombies
+💥 Headshot! Killed 3 zombies | Freed 284MB RAM
+```
 
 ## ⚙️ Config
 
@@ -57,16 +78,26 @@ No tokens wasted - notification goes via `ignored` message.
 
 | Option | Default | What |
 |--------|---------|------|
-| `autoKill` | `true` | kill automatically or just notify |
+| `autoKill` | `true` | auto-kill or just notify |
 | `threshold` | `1` | min zombies to trigger |
 
-Set `autoKill: false` for manual mode - plugin will only notify, you pull the trigger with `/kill-zombies`.
+**RAMBO MODE** (default) - kill on sight:
+```json
+{ "autoKill": true, "threshold": 1 }
+```
+
+**MANUAL MODE** - you pull the trigger:
+```json
+{ "autoKill": false }
+```
 
 ## 🖥️ Platforms
 
-- macOS ✅
-- Linux ✅  
-- Windows ❌ zombies win
+| Platform | Status |
+|----------|--------|
+| macOS | ✅ hunting |
+| Linux | ✅ hunting |
+| Windows | ❌ zombies win |
 
 ## 🌍 Languages
 
@@ -74,7 +105,7 @@ Auto-detects from `LANG`: EN, RU, ZH.
 
 ## 📜 License
 
-MIT
+MIT - use it, fork it, kill zombies with it.
 
 ---
 
