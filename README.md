@@ -149,5 +149,5 @@ MIT — Use it, fork it, kill zombies with it.
 <p align="center">
   <i>Made with 🧠 (before zombies ate it)</i>
   <br><br>
-  <b>🇷🇺 From Russia with ❤️‍🔥</b>
+  <b>From Russia with <img src="./assets/russia-heart.png" width="20" height="20" alt="love"></b>
 </p>
